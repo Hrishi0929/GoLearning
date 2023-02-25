@@ -1,6 +1,12 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"io/ioutil"
+	"math/rand"
+	"os"
+	"strings"
+)
 
 // create a new type called deck
 //
@@ -52,4 +58,38 @@ func deal(d deck, handSize int) (deck, deck) { // here we are returning 2 values
 
 	return d[:handSize], d[handSize:]
 
+}
+
+func (d deck) toString() string {
+	// we can do this because we derived the type deck from the string so we can go from type deck to type string pretty easily by doing it like this
+	return strings.Join([]string(d), ",") // strings.Join takes the string slice as the first arg and the seperator as the second arg
+
+}
+
+func (d deck) saveToFile(filename string) error {
+	return ioutil.WriteFile(filename, []byte(d.toString()), 0666) // 0666 is the permission for anyone can read and write this file
+
+}
+
+func newDeckFromFile(fileName string) deck {
+	biteSlice, err := ioutil.ReadFile(fileName) // ioutil.Readfile returns two values one is the biteSlice and other is the error object
+	if err != nil {
+		// whenever error handling is being done in go first wait and take some time to understand what can go wrong
+		// Option #1 --> log the error and return a call to newDeck()
+		// Option #2 --> Log the error and entirely quit the program
+		fmt.Println("Here is an error message😢 to review: ", err)
+		os.Exit(1) // here if we pass anything other than 0 that means there is an error in the program and os.Exit will quit the program entirely
+	}
+
+	sliceOfStrings := strings.Split(string(biteSlice), ",") // the first arg is the string that we want to split and the second arg is the separator which is "," in our case
+	return deck(sliceOfStrings)
+}
+
+func (d deck) shuffle() {
+
+	for i := range d {
+		newPosition := rand.Intn(len(d) - 1)
+		d[i], d[newPosition] = d[newPosition], d[i] // here we are taking whatever is at i and place it in the newPosition index and the element present at newPosition index to the index i
+		// inturn generating a random shhuffled deck
+	}
 }

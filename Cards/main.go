@@ -39,12 +39,27 @@ func main() {
 
 	// since we have defined the type deck in deck.go which is a slice of strings
 	// we can now replace []string to deck
-	cards := newDeck()
+	// cards := newDeck()
 
 	// cards.print()
-	hand, remainingCards := deal(cards, 5) // since deal function returns 2 values so we initialize and assign the first value returned to hand variable and initialize and assign the second returned value to remainingCards variable
-	hand.print()
-	remainingCards.print()
+	// hand, remainingCards := deal(cards, 5) // since deal function returns 2 values so we initialize and assign the first value returned to hand variable and initialize and assign the second returned value to remainingCards variable
+	// hand.print()
+	// remainingCards.print()
+
+	// here i have again initialized cards variable because we are using a new method called toString
+	// we store the initialized deck to a file called myCards
+	// cards := newDeck()
+	// // fmt.Println(cards.toString())
+	// cards.saveToFile("myCards")
+
+	// here we initialize cards again be cause we ewant to read from a file that we stored
+	// cards := newDeckFromFile("myCardsss")
+	// cards.print()
+
+	// we are re initializing cards again here to check how the shuffle function works
+	cards := newDeck()
+	cards.shuffle()
+	cards.print()
 
 }
 
