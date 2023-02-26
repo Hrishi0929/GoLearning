@@ -6,6 +6,7 @@ import (
 	"math/rand"
 	"os"
 	"strings"
+	"time"
 )
 
 // create a new type called deck
@@ -41,6 +42,7 @@ func newDeck() deck { // this function will return a value of type deck
 
 // by convention we usually refer to the receiver with a one or two letter abbreviation that matches
 // the type of the receiver in this case our receiver is of type deck so we refer the reciver as 'd'
+// d is a receiver of type deck
 
 func (d deck) print() {
 	for i, card := range d {
@@ -86,9 +88,21 @@ func newDeckFromFile(fileName string) deck {
 }
 
 func (d deck) shuffle() {
+	// 	So we're using time.Now().UnixNano() to generate a different INT 64 number.
+	// Every single time we start up our program, we use that as the seed to generate a new source object rand.NewSource().
+	// And then we use that source object as the basis for our new random number generator.
 
+	// the reason we use the time.Now().UnixNano() is because every time we run the program we are going to get the current time which will
+	// reflected as a value of type int64 which we will use as a seed for our random number generator
+	source := rand.NewSource(time.Now().UnixNano())
+	randomNumberGenerator := rand.New(source)
 	for i := range d {
-		newPosition := rand.Intn(len(d) - 1)
+		// the reason we use the randomNumberGenerator instead of the rand library is because the random number generated
+		// by the rand.Intn uses the same seed so the random number generated was actually a pseudo random number
+		// that's why we can see that we get the seed from the rand.NewSource() function and then using a random seed
+		// we generate a random number using rand.New(source) and we pass in the source variable
+		// now the randomNumberGenerator.Intn will give us a truly random number
+		newPosition := randomNumberGenerator.Intn(len(d) - 1)
 		d[i], d[newPosition] = d[newPosition], d[i] // here we are taking whatever is at i and place it in the newPosition index and the element present at newPosition index to the index i
 		// inturn generating a random shhuffled deck
 	}
